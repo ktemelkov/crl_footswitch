@@ -25,14 +25,12 @@
 
 #ifdef MODEL_K
   #define ODRIVE_RELAY_SET_PIN 2
-  #define ODRIVE_RELAY_RESET_PIN 9
 
   #define EQ_RELAY_SET_PIN    7
   #define DELAY_RELAY_SET_PIN 10
   #define NGATE_RELAY_SET_PIN 8
 
   #define MUTE_RELAY_SET_PIN  6
-  #define MUTE_RELAY_RESET_PIN  11
 
   #define CLEAN_DIRTY_BUTTON_PIN 12
   #define RYTHM_LEAD_BUTTON_PIN  13
@@ -45,7 +43,6 @@
   #define NGATE_RELAY_SET_PIN 8
 
   #define MUTE_RELAY_SET_PIN  6
-  #define MUTE_RELAY_RESET_PIN  11
 
   #define CLEAN_DIRTY_BUTTON_PIN 12
   #define RYTHM_LEAD_BUTTON_PIN  13
@@ -128,9 +125,8 @@ void initSwitches() {
  *
  */
 void applyState() {
-  digitalWrite(MUTE_RELAY_RESET_PIN, 0);
   digitalWrite(MUTE_RELAY_SET_PIN, 1);
-  delay(20);
+  delay(50);
 
   if ((pedalState & CLEAN_DIRTY_CHANNEL_MASK) == DIRTY_CHANNEL_ON_FLAG) {
     if ((pedalState & LEAD_RYTHM_CHANNEL_MASK) == LEAD_CHANNEL_ON_FLAG) {
@@ -139,17 +135,15 @@ void applyState() {
       digitalWrite(DELAY_RELAY_SET_PIN, 1);
       digitalWrite(NGATE_RELAY_SET_PIN, 1);
       digitalWrite(ODRIVE_RELAY_SET_PIN, 1);
-#ifdef MODEL_K
-      digitalWrite(ODRIVE_RELAY_RESET_PIN, 0);
-#endif
     } else {
       // Rythm settings
       digitalWrite(EQ_RELAY_SET_PIN, 0);
       digitalWrite(DELAY_RELAY_SET_PIN, 0);
       digitalWrite(NGATE_RELAY_SET_PIN, 1);
-      digitalWrite(ODRIVE_RELAY_SET_PIN, 0);
 #ifdef MODEL_K
-      digitalWrite(ODRIVE_RELAY_RESET_PIN, 1);
+      digitalWrite(ODRIVE_RELAY_SET_PIN, 0);
+#else
+      digitalWrite(ODRIVE_RELAY_SET_PIN, 1);
 #endif
     }
   } else {
@@ -158,14 +152,10 @@ void applyState() {
     digitalWrite(DELAY_RELAY_SET_PIN, 1);
     digitalWrite(NGATE_RELAY_SET_PIN, 0);
     digitalWrite(ODRIVE_RELAY_SET_PIN, 0);
-#ifdef MODEL_K
-    digitalWrite(ODRIVE_RELAY_RESET_PIN, 1);
-#endif
   }
 
-  delay(30);
+  delay(50);
   digitalWrite(MUTE_RELAY_SET_PIN, 0);
-  digitalWrite(MUTE_RELAY_RESET_PIN, 1);
 }
 
 
@@ -176,15 +166,10 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(ODRIVE_RELAY_SET_PIN, OUTPUT);
 
-#ifdef MODEL_K
-  pinMode(ODRIVE_RELAY_RESET_PIN, OUTPUT);
-#endif
-
   pinMode(EQ_RELAY_SET_PIN, OUTPUT);
   pinMode(DELAY_RELAY_SET_PIN, OUTPUT);
   pinMode(NGATE_RELAY_SET_PIN, OUTPUT);
   pinMode(MUTE_RELAY_SET_PIN, OUTPUT);
-  pinMode(MUTE_RELAY_RESET_PIN, OUTPUT);
 
 #ifdef MODEL_K
   pinMode(CLEAN_DIRTY_BUTTON_PIN, INPUT_PULLUP);
